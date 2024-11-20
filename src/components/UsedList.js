@@ -16,21 +16,30 @@ const UsedList = ({ items }) => {
         <Card
           key={index}
           style={{
-            backgroundColor: '#fed660',
-            width: '150px',
-            height: '50px',
+            background: 'linear-gradient(135deg, #316C88, #D62CDE)', // 渐变颜色，从金黄色到橙色
+            width: '100px', // 设置为圆形时的宽度
+            height: '100px', // 设置为圆形时的高度
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '5px', // 为旧浏览器提供支持
-            borderRadius: '5px', // 设置圆角
+            borderRadius: '50%', // 设置为圆形
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // 添加轻微阴影
           }}
           shadow="sm"
           p="lg"
           radius="md"
           withBorder
         >
-          <div style={{ textAlign: 'center', fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'Noto Sans JP' }}>
+          <div
+            style={{
+              textAlign: 'center',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              fontFamily: 'Noto Sans JP',
+              color: '#e6b422', // 白色字体以增强对比度
+            }}
+          >
             {item}
           </div>
         </Card>

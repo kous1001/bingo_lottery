@@ -1,15 +1,24 @@
 import React from 'react';
 
-const ResultDisplay = ({ item, isDrawing }) => {
+const ResultDisplay = ({ chars, isDrawing }) => {
   return (
-    <div className="result-display text-center bg-white shadow-lg">
-      {isDrawing ? (
-        <div className="text-center text-5xl font-bold animate-flip">{item}</div> 
-      ) : item ? (
-        <div className="text-center text-5xl font-bold bounce-animation">{item}</div>
-      ) : (
-        '抽選待ち'
-      )}
+    <div className="flex justify-center space-x-30">
+      {chars.map((char, index) => (
+        <div
+          key={index}
+          className={`text-2xl text-center font-semibold border rounded bg-white shadow-lg flex items-center justify-center ${
+            isDrawing && !char ? 'animate-flip' : !isDrawing ? 'bounce-animation' : ''
+          }`}
+          style={{
+            width: '90px',
+            height: '90px',
+            transform: 'scale(2)',
+            transition: 'transform 0.5s',
+          }}
+        >
+          {char || ' '}
+        </div>
+      ))}
     </div>
   );
 };

@@ -8,7 +8,9 @@ const InputDrawer = ({ onAddItems, isOpen, toggleDrawer }) => {
 
   const handleAddItems = () => {
     // 将输入按换行符分割，并移除空项
-    const items = inputValue.split('\n').map(item => item.trim()).filter(item => item);
+    const items = inputValue.split('\n')
+                            .map(item => item.trim())
+                            .filter(item => item);
     onAddItems(items);
     setInputValue('');
   };
@@ -39,10 +41,10 @@ const InputDrawer = ({ onAddItems, isOpen, toggleDrawer }) => {
 
   return (
     <div className={`fixed top-0 right-0 h-full bg-white shadow-md transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 p-4`}>
-      <h2 className="text-xl font-bold mb-4">添加抽签项</h2>
+      <h2 className="text-xl font-bold mb-4">項目追加</h2>
       <textarea
         className="w-full p-2 border rounded mb-4"
-        placeholder="每行一个抽签项"
+        placeholder="名前ごと一行で入力してください"
         style={{ height: '200px' }}  // 设置高度为 200px
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
@@ -51,13 +53,13 @@ const InputDrawer = ({ onAddItems, isOpen, toggleDrawer }) => {
         className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
         onClick={handleAddItems}
       >
-        添加
+        追加
       </button>
       <button
         className="bg-gray-500 text-white py-2 px-4 ml-2 mt-2 rounded hover:bg-gray-600 transition"
         onClick={toggleDrawer}
       >
-        关闭
+        閉じる
       </button>
       <button
         className="focus:outline-none text-white bg-yellow-400 ml-2 mt-2  hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
