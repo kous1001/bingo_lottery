@@ -52,7 +52,7 @@
     transform: scale(2) translateY(0);
   }
   50% {
-    transform: scale(2) translateY(-20px);
+    transform: scale(2) translateY(-10px);
   }
 }
 

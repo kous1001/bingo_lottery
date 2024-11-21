@@ -28,6 +28,23 @@ const LotteryApp = () => {
     };
   }, []);
 
+  // 持续显示 confetti 当 items 为空
+  useEffect(() => {
+    let confettiInterval = null;
+    if (items.length === 0) {
+      confettiInterval = setInterval(() => {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      }, 2000);
+    }
+    return () => {
+      if (confettiInterval) clearInterval(confettiInterval);
+    };
+  }, [items]);
+  
   const handleFullscreen = () => {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen();
@@ -202,7 +219,7 @@ const LotteryApp = () => {
             )}
         </div>
         <p className='text-3xl font-bold text-fuchsia-700'>これまで出てきたお名前</p>
-        <UsedList items={usedItems} />
+        <UsedList items={usedItems}/>
         <InputDrawer isOpen={isDrawerOpen} onAddItems={handleAddItems} toggleDrawer={() => setIsDrawerOpen(false)} />
     </div>
   );
