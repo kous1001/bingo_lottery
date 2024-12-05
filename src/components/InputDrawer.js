@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import BonusPointsDrawer from "./BonusPointsDrawer"
 
-const InputDrawer = ({ onAddItems, isOpen, toggleDrawer }) => {
+const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDrawer }) => {
   const [inputValue, setInputValue] = useState('');
   // reloadFlg の初期値は false
   const [reloadFlg, setReloadFlg] = useState(false);
+  const [isBonusDrawerOpen, setIsBonusDrawerOpen] = useState(false);
 
 
   const handleAddItems = () => {
@@ -66,7 +68,21 @@ const InputDrawer = ({ onAddItems, isOpen, toggleDrawer }) => {
         onClick={toggleReloadFlg}>
         {reloadFlg ? 'Lock Reload' : 'Unlock Reload'}
       </button>
+      <br/>
+      <button
+        className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600 transition"
+        onClick={() => setIsBonusDrawerOpen(true)}
+      >
+        ボーナスポイント管理
+      </button>
+      <BonusPointsDrawer
+        isOpen={isBonusDrawerOpen}
+        toggleDrawer={() => setIsBonusDrawerOpen(false)}
+        bonusPoints={bonusPoints}
+        setBonusPoints={setBonusPoints}
+      />
     </div>
+    
   );
 };
 

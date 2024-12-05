@@ -2,7 +2,7 @@ import React from 'react';
 
 const ResultDisplay = ({ chars, isDrawing }) => {
   return (
-    <div className="flex justify-center space-x-30">
+    <div className="flex justify-center space-x-30" style={{height: `${90 * 2}px` }}>
       {chars.map((char, index) => (
         <div
           key={index}

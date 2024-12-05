@@ -13,6 +13,9 @@ const LotteryApp = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showWaiting, setShowWaiting] = useState(true);
+  const [bonusPoints, setBonusPoints] = useState([]);
+  const [drawCount, setDrawCount] = useState(0); // 抽選回数を追跡
+  const [notificationMessage, setNotificationMessage] = useState(null); // お知らせメッセージ
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -66,17 +69,34 @@ const LotteryApp = () => {
     setIsDrawerOpen(false); // ドロワーを閉じる
   };
 
+  
   const handleDraw = () => {
     if (isDrawing || items.length === 0) return;
     setShowWaiting(false); // 点击「スタート」后隐藏「抽選待ち」
     setIsDrawing(true);
+    
+    console.log("drawCount is " + drawCount);
 
-    const randomItem = items[Math.floor(Math.random() * items.length)];
+    // ボーナスポイントチェック
+    const previousBonus = bonusPoints.find((bp) => bp.round === drawCount);
+    const bonus = bonusPoints.find((bp) => bp.round === drawCount + 1);
+    const upcomingBonus = bonusPoints.find((bp) => bp.round === drawCount + 2);
+  
+    const drawItems = bonus ? bonus.items : items;
+    const randomItem = drawItems[Math.floor(Math.random() * drawItems.length)];
+  
     const charArray = randomItem.split(''); // 分解所选项目为字符
     const slots = Array(charArray.length).fill(null); // 初始化空槽位
     setSelectedChars(slots);
     const audioStart = new Audio('/assets/sounds/ドラムロール.mp3');
-    audioStart.play().catch((err) => console.error('音频播放失败:', err));
+    audioStart
+    .play()
+    .then(() => {
+      if (previousBonus) {
+        setNotificationMessage(null); // ボーナス後の通常抽選で通知をクリア
+      }
+    })
+    .catch((err) => console.error('音声再生エラー:', err));
 
     // 控制每个字符独立旋转并停止
     charArray.forEach((_, index) => {
@@ -121,11 +141,35 @@ const LotteryApp = () => {
               audioStart.pause();
               audioStart.currentTime = 0;
               const audio = new Audio('/assets/sounds/レベルアップ.mp3');
-              audio.play().catch((err) => console.error('音频播放失败:', err));
+              audio
+          .play()
+          .then(() => {
+            // 「レベルアップ」音声再生後に通知を設定
+            if (upcomingBonus) {
+              if(upcomingBonus.round === 5){
+                setNotificationMessage(
+                  `次のボーナスポイントの抽選を行います： 一番優しい役員は誰でしょうか？`
+                );
+              }else if(upcomingBonus.round === 15){
+                setNotificationMessage(
+                  `次のボーナスポイントの抽選を行います： 一番お酒のことを愛している事業部長は誰でしょうか？`
+                );
+              }else if(upcomingBonus.round === 20){
+                setNotificationMessage(
+                  `次のボーナスポイントの抽選を行います： 一番バイクが好きな事業部長は誰でしょうか？`
+                );
+              }else{
+                setNotificationMessage(
+                  `次のボーナスポイントの抽選を行います`
+                );
+              }
+            } 
+          })
+          .catch((err) => console.error('音声再生エラー:', err));         
             }, 500);
           }
         }, 700 * (index + 1)); // 每个字符停止的延迟时间
-      }else{     
+      } else {     
         setSelectedChars((prev) => {
           const newChars = [...prev];
           newChars[index] = charArray[index];
@@ -133,17 +177,18 @@ const LotteryApp = () => {
         });
 
         if (index === charArray.length - 1) {
-        setItems((prev) => prev.filter((item) => item !== randomItem)); // 从项目中移除已选项
-        setUsedItems((prev) => [...prev, randomItem]); // 添加到已使用列表
-        setIsDrawing(false);
+          setItems((prev) => prev.filter((item) => item !== randomItem)); // 从项目中移除已选项
+          setUsedItems((prev) => [...prev, randomItem]); // 添加到已使用列表
+          setIsDrawing(false);
 
-        // 触发礼炮效果
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        const audio = new Audio('/assets/sounds/レベルアップ.mp3');
-        audio.play().catch((err) => console.error('音频播放失败:', err));
+          // 触发礼炮效果
+          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+          const audio = new Audio('/assets/sounds/レベルアップ.mp3');
+          audio.play().catch((err) => console.error('音声再生エラー:', err));                
         }
       }
     });
+    setDrawCount((prev) => prev + 1); // 抽選回数を増加
 
     // const randomItem = items[Math.floor(Math.random() * items.length)];
     // const charArray = randomItem.slice(0, 5).split(''); // 将抽签项分解为最多5个字符
@@ -184,18 +229,27 @@ const LotteryApp = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-        <canvas id="christmasCanvas"></canvas>
-        <h1 className="text-4xl font-bold mb-20">🎉NAME BINGO🎉</h1>
+        <h1 className="text-4xl font-bold mb-5">🎉NAME BINGO🎉</h1>
+        <h2 className='mb-5'>ROUND: {drawCount}</h2>
+        {notificationMessage && (
+          <div className="bg-yellow-300 text-yellow-900 font-bold p-4 mb-10 rounded shadow-md">
+            {notificationMessage}
+          </div>
+        )}
         {showWaiting && ( // 初始显示「抽選待ち」
           <div className="text-white text-4xl font-bold border rounded shadow-lg bg-gray-700 p-6 mb-6">
             抽選待ち
           </div>
         )}
-        <div className="w-full justify-center items-center ">
-          <ResultDisplay chars={selectedChars} isDrawing={isDrawing} />
-        </div>
+         {!showWaiting &&
+          <>
+            <div className="w-full justify-center " style={{height: `${90 * 2}px` }}>
+              <ResultDisplay chars={selectedChars} isDrawing={isDrawing} />
+            </div>
+          </>
+        }
         {/* <ResultDisplay item={selectedItem} isDrawing={isDrawing} /> */}
-        <div className="flex justify-center items-center space-x-4 mt-20">
+        <div className="flex justify-center items-center space-x-4 mt-10">
             <button
                 className="bg-green-500 text-white py-2 px-6 rounded hover:bg-green-600 active:bg-green-700 transition mb-4"
                 onClick={handleDraw}
@@ -218,9 +272,9 @@ const LotteryApp = () => {
                 </button>
             )}
         </div>
-        <p className='text-3xl font-bold text-fuchsia-700'>これまで出てきたお名前</p>
+        <p className='text-3xl font-bold text-fuchsia-700 mt-3'>これまで出てきたお名前</p>
         <UsedList items={usedItems}/>
-        <InputDrawer isOpen={isDrawerOpen} onAddItems={handleAddItems} toggleDrawer={() => setIsDrawerOpen(false)} />
+        <InputDrawer isOpen={isDrawerOpen} onAddItems={handleAddItems} bonusPoints={bonusPoints} setBonusPoints={setBonusPoints} toggleDrawer={() => setIsDrawerOpen(false)} />
     </div>
   );
 };
