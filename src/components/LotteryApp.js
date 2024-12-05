@@ -147,7 +147,7 @@ const LotteryApp = () => {
             if (upcomingBonus) {
               if(upcomingBonus.round === 5){
                 setNotificationMessage(
-                  {title:"次はボーナスポイントの抽選を行います", topic: "一番優しい役員は誰でしょうか？"}
+                  {title:"次はボーナスポイントの抽選を行います", topic: "一番テニスがうまい役員はは誰でしょうか？"}
                 );
               }else if(upcomingBonus.round === 15){
                 setNotificationMessage(
@@ -163,7 +163,7 @@ const LotteryApp = () => {
                 );
               }
             }
-            
+
             if(bonus){
               if(bonus.round === 5){
                 setNotificationMessage(
