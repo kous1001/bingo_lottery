@@ -4,6 +4,7 @@ import UsedList from './UsedList';
 import InputDrawer from './InputDrawer';
 import '../App.css';
 import confetti from 'canvas-confetti';
+import NotificationCard from './NotificationCard';
 
 const LotteryApp = () => {
   const [items, setItems] = useState([]);
@@ -75,8 +76,6 @@ const LotteryApp = () => {
     setShowWaiting(false); // 点击「スタート」后隐藏「抽選待ち」
     setIsDrawing(true);
     
-    console.log("drawCount is " + drawCount);
-
     // ボーナスポイントチェック
     const previousBonus = bonusPoints.find((bp) => bp.round === drawCount);
     const bonus = bonusPoints.find((bp) => bp.round === drawCount + 1);
@@ -148,22 +147,38 @@ const LotteryApp = () => {
             if (upcomingBonus) {
               if(upcomingBonus.round === 5){
                 setNotificationMessage(
-                  `次はボーナスポイントの抽選を行います： 一番優しい役員は誰でしょうか？`
+                  {title:"次はボーナスポイントの抽選を行います", topic: "一番優しい役員は誰でしょうか？"}
                 );
               }else if(upcomingBonus.round === 15){
                 setNotificationMessage(
-                  `次はボーナスポイントの抽選を行います： 一番お酒のことを愛している事業部長は誰でしょうか？`
+                  {title:"次はボーナスポイントの抽選を行います", topic: "一番お酒のことを愛している事業部長は誰でしょうか？"}
                 );
               }else if(upcomingBonus.round === 20){
                 setNotificationMessage(
-                  `次はボーナスポイントの抽選を行います： 一番バイクが好きな事業部長は誰でしょうか？`
+                  {title:"次はボーナスポイントの抽選を行います", topic: " 一番バイクが好きな事業部長は誰でしょうか？"}
                 );
               }else{
                 setNotificationMessage(
-                  `次はボーナスポイントの抽選を行います`
+                  {title:"次はボーナスポイントの抽選を行います", topic: ""}
                 );
               }
-            } 
+            }
+            
+            if(bonus){
+              if(bonus.round === 5){
+                setNotificationMessage(
+                  {title:"", topic: "一番優しい役員は誰でしょうか？", answer:"👇こちらの方らしいです👇"}
+                );
+              }else if(bonus.round === 15){
+                setNotificationMessage(
+                  {title:"", topic: "一番お酒のことを愛している事業部長は誰でしょうか？", answer:"👇こちらの方らしいです👇"}
+                );
+              }else if(bonus.round === 20){
+                setNotificationMessage(
+                  {title:"", topic: " 一番バイクが好きな事業部長は誰でしょうか？", answer:"👇こちらの方らしいです👇"}
+                );
+              }
+            }
           })
           .catch((err) => console.error('音声再生エラー:', err));         
             }, 500);
@@ -232,9 +247,10 @@ const LotteryApp = () => {
         <h1 className="text-4xl font-bold mb-5">🎉NAME BINGO🎉</h1>
         <h2 className='mb-5'>ROUND: {drawCount}</h2>
         {notificationMessage && (
-          <div className="bg-yellow-300 text-yellow-900 font-bold p-4 mb-10 rounded shadow-md">
-            {notificationMessage}
-          </div>
+          // <div className="bg-yellow-300 text-yellow-900 font-bold p-6 mb-10 rounded shadow-md">
+          //   {notificationMessage}
+          // </div>
+          <NotificationCard message={notificationMessage} />
         )}
         {showWaiting && ( // 初始显示「抽選待ち」
           <div className="text-white text-4xl font-bold border rounded shadow-lg bg-gray-700 p-6 mb-6">
