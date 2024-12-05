@@ -167,7 +167,7 @@ const LotteryApp = () => {
             if(bonus){
               if(bonus.round === 5){
                 setNotificationMessage(
-                  {title:"", topic: "一番優しい役員は誰でしょうか？", answer:"👇こちらの方らしいです👇"}
+                  {title:"", topic: "一番テニスがうまい役員はは誰でしょうか？", answer:"👇こちらの方らしいです👇"}
                 );
               }else if(bonus.round === 15){
                 setNotificationMessage(
