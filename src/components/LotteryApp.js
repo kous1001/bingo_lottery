@@ -148,19 +148,19 @@ const LotteryApp = () => {
             if (upcomingBonus) {
               if(upcomingBonus.round === 5){
                 setNotificationMessage(
-                  `次のボーナスポイントの抽選を行います： 一番優しい役員は誰でしょうか？`
+                  `次はボーナスポイントの抽選を行います： 一番優しい役員は誰でしょうか？`
                 );
               }else if(upcomingBonus.round === 15){
                 setNotificationMessage(
-                  `次のボーナスポイントの抽選を行います： 一番お酒のことを愛している事業部長は誰でしょうか？`
+                  `次はボーナスポイントの抽選を行います： 一番お酒のことを愛している事業部長は誰でしょうか？`
                 );
               }else if(upcomingBonus.round === 20){
                 setNotificationMessage(
-                  `次のボーナスポイントの抽選を行います： 一番バイクが好きな事業部長は誰でしょうか？`
+                  `次はボーナスポイントの抽選を行います： 一番バイクが好きな事業部長は誰でしょうか？`
                 );
               }else{
                 setNotificationMessage(
-                  `次のボーナスポイントの抽選を行います`
+                  `次はボーナスポイントの抽選を行います`
                 );
               }
             } 
