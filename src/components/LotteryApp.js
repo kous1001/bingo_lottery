@@ -147,15 +147,15 @@ const LotteryApp = () => {
             if (upcomingBonus) {
               if(upcomingBonus.round === 5){
                 setNotificationMessage(
-                  {title:"次はボーナスポイントの抽選を行います", topic: "一番テニスがうまい役員はは誰でしょうか？"}
+                  {title:"次はボーナスポイントの抽選を行います", topic: "一番テニス🎾がうまい役員はは誰でしょうか？"}
                 );
               }else if(upcomingBonus.round === 15){
                 setNotificationMessage(
-                  {title:"次はボーナスポイントの抽選を行います", topic: "一番お酒のことを愛している事業部長は誰でしょうか？"}
+                  {title:"次はボーナスポイントの抽選を行います", topic: "一番お酒🍺のことを愛している事業部長は誰でしょうか？"}
                 );
               }else if(upcomingBonus.round === 20){
                 setNotificationMessage(
-                  {title:"次はボーナスポイントの抽選を行います", topic: " 一番バイクが好きな事業部長は誰でしょうか？"}
+                  {title:"次はボーナスポイントの抽選を行います", topic: " 一番バイク🏍が好きな事業部長は誰でしょうか？"}
                 );
               }else{
                 setNotificationMessage(
@@ -167,15 +167,15 @@ const LotteryApp = () => {
             if(bonus){
               if(bonus.round === 5){
                 setNotificationMessage(
-                  {title:"", topic: "一番テニスがうまい役員はは誰でしょうか？", answer:"👇こちらの方らしいです👇"}
+                  {title:"", topic: "一番テニスがうまい役員はは誰でしょうか？", answer:"👇🎾こちらの方らしいです🎾👇"}
                 );
               }else if(bonus.round === 15){
                 setNotificationMessage(
-                  {title:"", topic: "一番お酒のことを愛している事業部長は誰でしょうか？", answer:"👇こちらの方らしいです👇"}
+                  {title:"", topic: "一番お酒のことを愛している事業部長は誰でしょうか？", answer:"👇🍺こちらの方らしいです🍺👇"}
                 );
               }else if(bonus.round === 20){
                 setNotificationMessage(
-                  {title:"", topic: " 一番バイクが好きな事業部長は誰でしょうか？", answer:"👇こちらの方らしいです👇"}
+                  {title:"", topic: " 一番バイクが好きな事業部長は誰でしょうか？", answer:"👇🏍こちらの方らしいです🏍👇"}
                 );
               }
             }
@@ -243,54 +243,381 @@ const LotteryApp = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-        <h1 className="text-4xl font-bold mb-5">🎉NAME BINGO🎉</h1>
-        <h2 className='mb-5'>ROUND: {drawCount}</h2>
-        {notificationMessage && (
-          // <div className="bg-yellow-300 text-yellow-900 font-bold p-6 mb-10 rounded shadow-md">
-          //   {notificationMessage}
-          // </div>
-          <NotificationCard message={notificationMessage} />
-        )}
-        {showWaiting && ( // 初始显示「抽選待ち」
-          <div className="text-white text-4xl font-bold border rounded shadow-lg bg-gray-700 p-6 mb-6">
-            抽選待ち
-          </div>
-        )}
-         {!showWaiting &&
+    <div className="min-h-screen flex">
+      {/* Define rocket size variables */}
+      {(() => {
+        const rocketScale = 3; // Base scale factor - adjust this to change overall size
+        const baseWidth = 60;  // Base width
+        const baseHeight = 120; // Base height
+        const rocketWidth = baseWidth * rocketScale;
+        const rocketHeight = baseHeight * rocketScale;
+        const headWidth = (baseWidth/2) * rocketScale;
+        const headHeight = (baseHeight/3) * rocketScale;
+        const bodyWidth = headWidth;
+        const bodyHeight = (2*baseHeight/3) * rocketScale;
+        const finWidth = rocketWidth;
+        const finHeight = (baseHeight/6) * rocketScale;
+        const flameWidth = headWidth * 2/3;
+        const flameHeight = headHeight;
+        const fontSize = 12 * rocketScale;
+
+        return (
           <>
-            <div className="w-full justify-center " style={{height: `${90 * 2}px` }}>
-              <ResultDisplay chars={selectedChars} isDrawing={isDrawing} />
-            </div>
-          </>
-        }
-        {/* <ResultDisplay item={selectedItem} isDrawing={isDrawing} /> */}
-        <div className="flex justify-center items-center space-x-4 mt-10">
-            <button
-                className="bg-green-500 text-white py-2 px-6 rounded hover:bg-green-600 active:bg-green-700 transition mb-4"
-                onClick={handleDraw}
-                disabled={isDrawing || items.length === 0}
-            >
-                {items.length > 0 ? 'スタート' : '終わり'}
-            </button>
-            <button
-                className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition  mb-4"
-                onClick={() => setIsDrawerOpen(true)}
-            >
-                抽選項目追加
-            </button>
-            {!isFullscreen && ( // 仅当不是全屏时显示全屏按钮
-                <button
-                className="bg-purple-500 text-white py-2 px-6 rounded hover:bg-purple-600 transition mb-4"
-                onClick={handleFullscreen}
-                >
-                フルスクリーン表示
-                </button>
+            {/* Left Side - Two Rockets */}
+            {bonusPoints.some(bonusPoint => bonusPoint.round === drawCount) && (
+              <>
+                <div className="fixed left-0 w-1/6 h-screen">
+                  <div className="absolute left-4 bottom-0 animate-rocket" style={{
+                    width: rocketWidth,
+                    height: rocketHeight,
+                    zIndex: 10
+                  }}>
+                    {/* First Left Rocket */}
+                    <div style={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center'
+                    }}>
+                      <div style={{
+                        width: headWidth,
+                        height: headHeight,
+                        background: '#ff0000',
+                        clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'
+                      }}></div>
+                      <div style={{
+                        width: bodyWidth,
+                        height: bodyHeight,
+                        background: 'linear-gradient(to right, #d1d5db, #e5e7eb, #d1d5db)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-around',
+                        color: '#000',
+                        fontWeight: 'bold',
+                        fontSize: `${fontSize}px`
+                      }}>
+                        <span>A</span>
+                        <span>D</span>
+                        <span>V</span>
+                      </div>
+                      <div style={{
+                        width: finWidth,
+                        height: finHeight,
+                        position: 'relative'
+                      }}>
+                        <div style={{
+                          position: 'absolute',
+                          left: 0,
+                          bottom: 0,
+                          width: finHeight,
+                          height: finHeight,
+                          background: '#ff0000',
+                          clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+                        }}></div>
+                        <div style={{
+                          position: 'absolute',
+                          right: 0,
+                          bottom: 0,
+                          width: finHeight,
+                          height: finHeight,
+                          background: '#ff0000',
+                          clipPath: 'polygon(0 0, 0 100%, 100% 100%)'
+                        }}></div>
+                      </div>
+                    </div>
+                    <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2" style={{
+                      width: flameWidth,
+                      height: flameHeight,
+                      background: 'linear-gradient(to top, #fef08a, #fde047, #facc15, #fb923c)',
+                      clipPath: 'polygon(0 100%, 50% 0, 100% 100%)',
+                      animation: 'flicker 0.3s infinite'
+                    }}></div>
+                  </div>
+
+                  <div className="absolute left-48 bottom-0 animate-rocket-delayed" style={{
+                    width: rocketWidth,
+                    height: rocketHeight,
+                    zIndex: 10
+                  }}>
+                    {/* Second Left Rocket - Same structure */}
+                    <div style={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center'
+                    }}>
+                      <div style={{
+                        width: headWidth,
+                        height: headHeight,
+                        background: '#ff0000',
+                        clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'
+                      }}></div>
+                      <div style={{
+                        width: bodyWidth,
+                        height: bodyHeight,
+                        background: 'linear-gradient(to right, #d1d5db, #e5e7eb, #d1d5db)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-around',
+                        color: '#000',
+                        fontWeight: 'bold',
+                        fontSize: `${fontSize}px`
+                      }}>
+                        <span>F</span>
+                        <span>T</span>
+                      </div>
+                      <div style={{
+                        width: finWidth,
+                        height: finHeight,
+                        position: 'relative'
+                      }}>
+                        <div style={{
+                          position: 'absolute',
+                          left: 0,
+                          bottom: 0,
+                          width: finHeight,
+                          height: finHeight,
+                          background: '#ff0000',
+                          clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+                        }}></div>
+                        <div style={{
+                          position: 'absolute',
+                          right: 0,
+                          bottom: 0,
+                          width: finHeight,
+                          height: finHeight,
+                          background: '#ff0000',
+                          clipPath: 'polygon(0 0, 0 100%, 100% 100%)'
+                        }}></div>
+                      </div>
+                    </div>
+                    <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2" style={{
+                      width: flameWidth,
+                      height: flameHeight,
+                      background: 'linear-gradient(to top, #fef08a, #fde047, #facc15, #fb923c)',
+                      clipPath: 'polygon(0 100%, 50% 0, 100% 100%)',
+                      animation: 'flicker 0.3s infinite'
+                    }}></div>
+                  </div>
+                </div>
+              </>
             )}
-        </div>
-        <p className='text-3xl font-bold text-fuchsia-700 mt-3'>これまで出てきたお名前</p>
-        <UsedList items={usedItems}/>
-        <InputDrawer isOpen={isDrawerOpen} onAddItems={handleAddItems} bonusPoints={bonusPoints} setBonusPoints={setBonusPoints} toggleDrawer={() => setIsDrawerOpen(false)} />
+
+              {/* Center Content */}
+              <div className="flex-1 flex flex-col items-center justify-center px-4">
+                  <h1 className="text-4xl font-bold mb-5">🎉NAME BINGO🎉</h1>
+                  <h2 className='mb-5'>ROUND: {drawCount}</h2>
+                  {notificationMessage && (
+                      <NotificationCard message={notificationMessage} />
+                  )}
+                  {showWaiting && (
+                      <div className="text-white text-4xl font-bold border rounded shadow-lg bg-gray-700 p-6 mb-6">
+                          抽選待ち
+                      </div>
+                  )}
+                  {!showWaiting &&
+                      <>
+                          <div className="w-full justify-center" style={{height: `${90 * 2}px`}}>
+                              <ResultDisplay chars={selectedChars} isDrawing={isDrawing} />
+                          </div>
+                      </>
+                  }
+                  <div className="flex justify-center items-center space-x-4 mt-10">
+                      <button
+                          className="bg-green-500 text-white py-2 px-6 rounded hover:bg-green-600 active:bg-green-700 transition mb-4"
+                          onClick={handleDraw}
+                          disabled={isDrawing || items.length === 0}
+                      >
+                          {items.length > 0 ? 'スタート' : '終わり'}
+                      </button>
+                      <button
+                          className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition mb-4"
+                          onClick={() => setIsDrawerOpen(true)}
+                      >
+                          抽選項目追加
+                      </button>
+                      {!isFullscreen && (
+                          <button
+                              className="bg-purple-500 text-white py-2 px-6 rounded hover:bg-purple-600 transition mb-4"
+                              onClick={handleFullscreen}
+                          >
+                              フルスクリーン表示
+                          </button>
+                      )}
+                  </div>
+                  <p className='text-3xl font-bold text-fuchsia-700 mt-3'>これまで出てきたお名前</p>
+                  <UsedList items={usedItems}/>
+                  <InputDrawer isOpen={isDrawerOpen} onAddItems={handleAddItems} bonusPoints={bonusPoints} setBonusPoints={setBonusPoints} toggleDrawer={() => setIsDrawerOpen(false)} />
+              </div>
+
+            {/* Right Side - Two Rockets */}
+            {bonusPoints.some(bonusPoint => bonusPoint.round === drawCount) && (
+              <>
+                <div className="fixed right-0 w-1/6 h-screen">
+                  <div className="absolute right-4 bottom-0 animate-rocket" style={{
+                    width: rocketWidth,
+                    height: rocketHeight,
+                    zIndex: 10
+                  }}>
+                    {/* First Right Rocket */}
+                    <div style={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center'
+                    }}>
+                      <div style={{
+                        width: headWidth,
+                        height: headHeight,
+                        background: '#ff0000',
+                        clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'
+                      }}></div>
+                      <div style={{
+                        width: bodyWidth,
+                        height: bodyHeight,
+                        background: 'linear-gradient(to right, #d1d5db, #e5e7eb, #d1d5db)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-around',
+                        color: '#000',
+                        fontWeight: 'bold',
+                        fontSize: `${fontSize}px`
+                      }}>
+                        <span>A</span>
+                        <span>D</span>
+                        <span>M</span>
+                      </div>
+                      <div style={{
+                        width: finWidth,
+                        height: finHeight,
+                        position: 'relative'
+                      }}>
+                        <div style={{
+                          position: 'absolute',
+                          left: 0,
+                          bottom: 0,
+                          width: finHeight,
+                          height: finHeight,
+                          background: '#ff0000',
+                          clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+                        }}></div>
+                        <div style={{
+                          position: 'absolute',
+                          right: 0,
+                          bottom: 0,
+                          width: finHeight,
+                          height: finHeight,
+                          background: '#ff0000',
+                          clipPath: 'polygon(0 0, 0 100%, 100% 100%)'
+                        }}></div>
+                      </div>
+                    </div>
+                    <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2" style={{
+                      width: flameWidth,
+                      height: flameHeight,
+                      background: 'linear-gradient(to top, #fef08a, #fde047, #facc15, #fb923c)',
+                      clipPath: 'polygon(0 100%, 50% 0, 100% 100%)',
+                      animation: 'flicker 0.3s infinite'
+                    }}></div>
+                  </div>
+
+                  <div className="absolute right-48 bottom-0 animate-rocket-delayed" style={{
+                    width: rocketWidth,
+                    height: rocketHeight,
+                    zIndex: 10
+                  }}>
+                    {/* Second Right Rocket */}
+                    <div style={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center'
+                    }}>
+                      <div style={{
+                        width: headWidth,
+                        height: headHeight,
+                        background: '#ff0000',
+                        clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'
+                      }}></div>
+                      <div style={{
+                        width: bodyWidth,
+                        height: bodyHeight,
+                        background: 'linear-gradient(to right, #d1d5db, #e5e7eb, #d1d5db)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-around',
+                        color: '#000',
+                        fontWeight: 'bold',
+                        fontSize: `${fontSize}px`
+                      }}>
+                        <span>C</span>
+                        <span>S</span>
+                      </div>
+                      <div style={{
+                        width: finWidth,
+                        height: finHeight,
+                        position: 'relative'
+                      }}>
+                        <div style={{
+                          position: 'absolute',
+                          left: 0,
+                          bottom: 0,
+                          width: finHeight,
+                          height: finHeight,
+                          background: '#ff0000',
+                          clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+                        }}></div>
+                        <div style={{
+                          position: 'absolute',
+                          right: 0,
+                          bottom: 0,
+                          width: finHeight,
+                          height: finHeight,
+                          background: '#ff0000',
+                          clipPath: 'polygon(0 0, 0 100%, 100% 100%)'
+                        }}></div>
+                      </div>
+                    </div>
+                    <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2" style={{
+                      width: flameWidth,
+                      height: flameHeight,
+                      background: 'linear-gradient(to top, #fef08a, #fde047, #facc15, #fb923c)',
+                      clipPath: 'polygon(0 100%, 50% 0, 100% 100%)',
+                      animation: 'flicker 0.3s infinite'
+                    }}></div>
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        );
+      })()}
+
+        <style jsx>{`
+            @keyframes flicker {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.7; }
+            }
+            .animate-rocket {
+                animation: rocketLaunch 1.5s linear forwards;
+            }
+            .animate-rocket-delayed {
+                animation: rocketLaunch 1.5s linear forwards;
+                animation-delay: 0.5s;
+            }
+            @keyframes rocketLaunch {
+                0% { transform: translateY(100%); }
+                100% { transform: translateY(-200vh); }
+            }
+        `}</style>
     </div>
   );
 };
