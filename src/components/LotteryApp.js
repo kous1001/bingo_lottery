@@ -644,7 +644,7 @@ const LotteryApp = () => {
                 50% { opacity: 0.7; }
             }
             .animate-rocket {
-                animation: rocketLaunch 1.5s linear forwards;
+                animation: rocketLaunch 1s linear forwards;
             }
             .animate-rocket-delayed {
                 animation: rocketLaunch 1.5s linear forwards;
