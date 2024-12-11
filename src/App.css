@@ -21,10 +21,6 @@
   align-items: center;
 }
 
-.bounce-animation {
-  animation: bounce 1s ease-in-out;
-}
-
 /* 保证 ResultDisplay 容器中字符垂直和水平居中 */
 .flex {
   display: flex;
@@ -36,37 +32,10 @@
   margin-left: 100px; /* 确保动画时保持间距一致 */
 }
 
-.animate-flip {
-  animation: flip 0.5s ease-in-out infinite;
-}
-
 .btnContainer{
   display: flex;
   width: 50%;
   justify-content: space-around;
-}
-
-/* 定义 bounce 动画 */
-@keyframes bounce {
-  0%, 100% {
-    transform: scale(2) translateY(0);
-  }
-  50% {
-    transform: scale(2) translateY(-10px);
-  }
-}
-
-/* 定义 flip 动画 */
-@keyframes flip {
-  0% {
-    transform: scale(2) rotateX(0deg);
-  }
-  50% {
-    transform: scale(2) rotateX(180deg);
-  }
-  100% {
-    transform: scale(2) rotateX(360deg);
-  }
 }
 
 .used-items {
@@ -84,3 +53,65 @@ button:disabled {
   background-color: #ddd;
   cursor: not-allowed;
 }
+
+.slot-wrapper {
+  perspective: 1000px;
+  width: 90px;
+  height: 90px;
+  margin: 0 60px;
+}
+
+.slot-cube {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.1s linear;
+}
+
+.slot-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  backface-visibility: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.slot-face.front  { transform: translateZ(45px); }
+.slot-face.back   { transform: rotateX(180deg) translateZ(45px); }
+.slot-face.top    { transform: rotateX(90deg) translateZ(45px); }
+.slot-face.bottom { transform: rotateX(-90deg) translateZ(45px); }
+.slot-face.left   { transform: rotateY(-90deg) translateZ(45px); }
+.slot-face.right  { transform: rotateY(90deg) translateZ(45px); }
+
+@keyframes slotSpin {
+  0% {
+    transform: rotateX(0deg);
+  }
+  25% {
+    transform: rotateX(90deg);
+  } 
+  50% {
+    transform: rotateX(180deg);
+  }
+  75% {
+    transform: rotateX(270deg);
+  }
+  100% {
+    transform: rotateX(360deg);
+  }
+}
+
+.spinning {
+  animation: slotSpin 0.6s linear infinite;
+} 
+

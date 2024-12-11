@@ -8,6 +8,7 @@ import NotificationCard from './NotificationCard';
 
 const LotteryApp = () => {
   const [items, setItems] = useState([]);
+  const [charGroup, setChatGroup] = useState([]);
   const [selectedChars, setSelectedChars] = useState([]);
   const [usedItems, setUsedItems] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -17,6 +18,7 @@ const LotteryApp = () => {
   const [bonusPoints, setBonusPoints] = useState([]);
   const [drawCount, setDrawCount] = useState(0); // 抽選回数を追跡
   const [notificationMessage, setNotificationMessage] = useState(null); // お知らせメッセージ
+  const [finalChars, setFinalChars] = useState([]); // 添加新的 state
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -70,7 +72,35 @@ const LotteryApp = () => {
     setIsDrawerOpen(false); // ドロワーを閉じる
   };
 
+  // function getMaxStringLength(array) {
+  //   // 配列の要素を1つずつ確認し、文字列の長さの最大値を求める
+  //   return array.reduce((maxLength, str) => {
+  //     return Math.max(maxLength, str.length);
+  //   }, 0); // 初期値は0
+  // }
+
+  function groupCharactersByIndex(array) {
+    const result = [];
+    
+    // 配列の各要素を1文字ずつ処理
+    array.forEach((str) => {
+      for (let i = 0; i < str.length; i++) {
+        // `result` の長さが不足している場合は空の配列を追加
+        if (!result[i]) {
+          result[i] = [];
+        }
+        // 各文字を適切なグループに追加
+        result[i].push(str[i]);
+      }
+    });
   
+    return result;
+  }
+
+  const updatePossibleChars = () => {
+    setChatGroup(groupCharactersByIndex(items));
+  }
+
   const handleDraw = () => {
     if (isDrawing || items.length === 0) return;
     setShowWaiting(false); // 点击「スタート」后隐藏「抽選待ち」
@@ -81,10 +111,12 @@ const LotteryApp = () => {
     const bonus = bonusPoints.find((bp) => bp.round === drawCount + 1);
     const upcomingBonus = bonusPoints.find((bp) => bp.round === drawCount + 2);
   
+    //get char from items
+    updatePossibleChars();    
     const drawItems = bonus ? bonus.items : items;
     const randomItem = drawItems[Math.floor(Math.random() * drawItems.length)];
-  
     const charArray = randomItem.split(''); // 分解所选项目为字符
+    setFinalChars(charArray); // 设置最终结果
     const slots = Array(charArray.length).fill(null); // 初始化空槽位
     setSelectedChars(slots);
     const audioStart = new Audio('/assets/sounds/ドラムロール.mp3');
@@ -115,7 +147,7 @@ const LotteryApp = () => {
             newChars[index] = currentChar;
             return newChars;
           });
-        }, 20); // 每50ms更新一次字符
+        }, 50); // 每50ms更新一次字符
     
         // 定时停止当前字符旋转
         setTimeout(() => {
@@ -180,7 +212,7 @@ const LotteryApp = () => {
               }
             }
           })
-          .catch((err) => console.error('音声再生エラー:', err));         
+          .catch((err) => console.error('音声再生エラー:', err));   
             }, 500);
           }
         }, 700 * (index + 1)); // 每个字符停止的延迟时间
@@ -243,7 +275,7 @@ const LotteryApp = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% ...">
       {/* Define rocket size variables */}
       {(() => {
         const rocketScale = 3; // Base scale factor - adjust this to change overall size
@@ -420,11 +452,16 @@ const LotteryApp = () => {
                       </div>
                   )}
                   {!showWaiting &&
-                      <>
-                          <div className="w-full justify-center" style={{height: `${90 * 2}px`}}>
-                              <ResultDisplay chars={selectedChars} isDrawing={isDrawing} />
-                          </div>
-                      </>
+                <>
+                  <div className="w-full justify-center" style={{ height: `${90 * 2}px` }}>
+                    <ResultDisplay
+                      chars={selectedChars}
+                      isDrawing={isDrawing}
+                      charGroup={charGroup}
+                      finalResult={finalChars} // 新增这行，传入最终结果 
+                    />
+                  </div>
+                </>
                   }
                   <div className="flex justify-center items-center space-x-4 mt-10">
                       <button
@@ -611,7 +648,6 @@ const LotteryApp = () => {
             }
             .animate-rocket-delayed {
                 animation: rocketLaunch 1.5s linear forwards;
-                animation-delay: 0.5s;
             }
             @keyframes rocketLaunch {
                 0% { transform: translateY(100%); }
