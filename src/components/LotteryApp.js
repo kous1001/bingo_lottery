@@ -471,12 +471,14 @@ const LotteryApp = () => {
                       >
                           {items.length > 0 ? 'スタート' : '終わり'}
                       </button>
-                      <button
-                          className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition mb-4"
-                          onClick={() => setIsDrawerOpen(true)}
-                      >
-                          抽選項目追加
-                      </button>
+                      {!isFullscreen &&
+                        <button
+                            className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition mb-4"
+                            onClick={() => setIsDrawerOpen(true)}
+                        >
+                            抽選項目追加
+                        </button>
+                      }
                       {!isFullscreen && (
                           <button
                               className="bg-purple-500 text-white py-2 px-6 rounded hover:bg-purple-600 transition mb-4"
