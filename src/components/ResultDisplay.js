@@ -7,41 +7,118 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
     // 检查当前字符是否与最终结果相同
     return char !== finalResult[index];
   };
-  const givenNameLength = metaDatas[resultIndex][0].length;
+  const familyNameLength = metaDatas[resultIndex][0].length;
   const depart = metaDatas[resultIndex][2]
-
+  const bgColor = (depart === "ADM") ?  "#e2fa40" :
+                  (depart === "ADV") ?  "#9F1E49" :
+                  (depart === "FT") ?  "#ed73a7" :
+                  (depart === "CS") ?  "#D0EF84" : "yellow";
+                
+  const familyChars = chars.slice(0, familyNameLength);
+  const givenChars = chars.slice(familyNameLength);
   return (
-    <div className="flex justify-center" style={{ height: `${90 * 2}px` }}>
-    {chars.map((char, index) => {
-      const adjustedIndex = Math.min(index, 3); // 4以上は3に制限
-      return (
-        <div
-          key={index}
-          className="slot-wrapper"
-          style={{
-            transform: 'scale(2)',
-          }}
-        >
+    <div className="flex justify-center items-center">
+      {/* Family Name Container */}
+      <div className="flex flex-col items-center" style={{ height: `${90*2}px`}}>
+        {/* Depart displayed only after drawing */}
+        {!isDrawing && (
           <div
-            className={`slot-cube ${isSpinning(char, adjustedIndex) ? 'spinning' : ''}`}
+            style={{
+              position: 'relative', // 👑を絶対配置で中央揃えするため
+              width: '120px',
+              height: '40px',
+              background: `${bgColor}`,
+              borderRadius: '15px',
+              textAlign: 'center',
+              lineHeight: '40px',
+              fontSize: '1.5rem',
+              marginBottom:"10px",
+              fontWeight: 'bold',
+            }}
           >
-            <div className="slot-face front">{char || ' '}</div>
-            <div className="slot-face back">
-              {charGroup[adjustedIndex][Math.floor(Math.random() * charGroup[adjustedIndex].length)] || ' '}
-            </div>
-            <div className="slot-face top">
-              {charGroup[adjustedIndex][Math.floor(Math.random() * charGroup[adjustedIndex].length)] || ' '}
-            </div>
-            <div className="slot-face bottom">
-              {charGroup[adjustedIndex][Math.floor(Math.random() * charGroup[adjustedIndex].length)] || ' '}
-            </div>
-            <div className="slot-face left">抽</div>
-            <div className="slot-face right">選</div>
+            {/* 👑アイコン */}
+            <span
+              style={{
+                position: 'absolute', // 絶対配置
+                top: '-37px', // departの上部に配置
+                left: '50%',
+                transform: 'translateX(-50%) scale(1.4)', // 中央揃え
+                fontSize: '1.5rem',
+              }}
+            >
+              👑
+            </span>
+            {/* depart文字列 */}
+            <span>{depart}</span>
           </div>
+        )}
+        {/* Family name characters */}
+        <div className={`flex ${!isDrawing ? 'familyNameContainer' : ''}`} style={{ height: `${125}px`}}>
+          {familyChars.map((char, index) => {
+            const adjustedIndex = Math.min(index, 3);
+            return (
+              <div
+                className="slot-wrapper"
+                key={index}
+                style={{
+                  transform: `scale(${isDrawing ? 2 : 1.3})`,
+                }}
+              >
+                <div
+                  className={`slot-cube ${isSpinning(char, adjustedIndex) ? 'spinning' : ''}`}
+                >
+                  <div className="slot-face front">{char || ' '}</div>
+                  <div className="slot-face back">
+                    {charGroup[adjustedIndex][Math.floor(Math.random() * charGroup[adjustedIndex].length)] || ' '}
+                  </div>
+                  <div className="slot-face top">
+                    {charGroup[adjustedIndex][Math.floor(Math.random() * charGroup[adjustedIndex].length)] || ' '}
+                  </div>
+                  <div className="slot-face bottom">
+                    {charGroup[adjustedIndex][Math.floor(Math.random() * charGroup[adjustedIndex].length)] || ' '}
+                  </div>
+                  <div className="slot-face left">抽</div>
+                  <div className="slot-face right">選</div>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      );
-    })}
-  </div>  
+      </div>
+
+      {/* Given Name Container */}
+      <div className="givenNameContainer flex" style={{ height: `${90 * 2}px`}}>
+        {givenChars.map((char, index) => {
+          const adjustedIndex = Math.min(familyNameLength - 1, 2);
+          return (
+            <div
+              className="slot-wrapper"
+              key={index}
+              style={{
+                transform: `scale(${isDrawing ? 2 : 2})`,
+              }}
+            >
+              <div
+                className={`slot-cube ${isSpinning(char, index+familyNameLength) ? 'spinning' : ''}`}
+              >
+                <div className="slot-face front">{char || ' '}</div>
+                <div className="slot-face back">
+                  {charGroup[adjustedIndex][Math.floor(Math.random() * charGroup[adjustedIndex].length)] || ' '}
+                </div>
+                <div className="slot-face top">
+                  {charGroup[adjustedIndex][Math.floor(Math.random() * charGroup[adjustedIndex].length)] || ' '}
+                </div>
+                <div className="slot-face bottom">
+                  {charGroup[adjustedIndex][Math.floor(Math.random() * charGroup[adjustedIndex].length)] || ' '}
+                </div>
+                <div className="slot-face left">抽</div>
+                <div className="slot-face right">選</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 

@@ -112,6 +112,10 @@ button:disabled {
 }
 
 .spinning {
-  animation: slotSpin 0.8s linear infinite;
+  animation: slotSpin 0.7s linear infinite;
 } 
+
+.familyNameContainer .slot-wrapper {
+  margin: 0 35px; /* 初期の間隔を設定 */
+}
 
