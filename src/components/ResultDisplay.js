@@ -55,7 +55,7 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
         {/* Family name characters */}
         <div className={`flex ${!isDrawing ? 'familyNameContainer' : ''}`} style={{ height: `${125}px`}}>
           {familyChars.map((char, index) => {
-            const adjustedIndex = Math.min(index, 3);
+            const adjustedIndex = Math.min(index, 2);
             return (
               <div
                 className="slot-wrapper"

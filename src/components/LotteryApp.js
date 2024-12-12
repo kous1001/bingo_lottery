@@ -64,7 +64,7 @@ const LotteryApp = () => {
     if (!newItems || newItems.length === 0) return; // newItemsが空の場合は何もしない
 
     // 重複しないアイテムをフィルタリング
-    const filteredItems = newItems.filter(item => (!items.includes(item) && !usedItems.includes(item)));
+    const filteredItems = newItems.filter(item => (!items.includes(item) && !usedItems.some(([key, value]) => key === item)));
 
     // 必要な場合のみ状態を更新
     if (filteredItems.length > 0) {
@@ -168,7 +168,7 @@ const LotteryApp = () => {
           if (index === charArray.length - 1) {
             setTimeout(() => {
               setItems((prev) => prev.filter((item) => item !== randomItem)); // 从项目中移除已选项
-              setUsedItems((prev) => [...prev, randomItem]); // 添加到已使用列表
+              setUsedItems((prev) => [...prev, [randomItem, findPersonIndex(metaDatas, randomItem)]]); // 添加到已使用列表
               setIsDrawing(false);
     
               // 触发礼炮效果
@@ -229,7 +229,7 @@ const LotteryApp = () => {
 
         if (index === charArray.length - 1) {
           setItems((prev) => prev.filter((item) => item !== randomItem)); // 从项目中移除已选项
-          setUsedItems((prev) => [...prev, randomItem]); // 添加到已使用列表
+          setUsedItems((prev) => [...prev, [randomItem, findPersonIndex(metaDatas, randomItem)]]); // 添加到已使用列表
           setIsDrawing(false);
 
           // 触发礼炮效果
@@ -240,42 +240,6 @@ const LotteryApp = () => {
       }
     });
     setDrawCount((prev) => prev + 1); // 抽選回数を増加
-
-    // const randomItem = items[Math.floor(Math.random() * items.length)];
-    // const charArray = randomItem.slice(0, 5).split(''); // 将抽签项分解为最多5个字符
-    // setSelectedChars(Array(charArray.length).fill('?')); // 显示占位符字符
-    // let iterations = 0;
-    // const duration = 1000; // 抽签持续时间 3 秒
-    // let intervalTime = 20; // 初始间隔时间
-
-    // const interval = setInterval(() => {
-    //      // 每个字符位置随机选择一个字符进行翻页动画
-    //     const randomChars = charArray.map(() => {
-    //       const randomItem = items[Math.floor(Math.random() * items.length)];
-    //       return randomItem.charAt(Math.floor(Math.random() * randomItem.length)) || '';
-    //     });
-    //     setSelectedChars(randomChars);
-    //     iterations += intervalTime;
-
-    //     // 逐渐增加间隔时间来实现减速效果
-    //     if (iterations >= duration) {
-    //       clearInterval(interval);
-    //       setSelectedChars(charArray); // 最终显示完整字符数组
-    //       setItems((prev) => prev.filter((item) => item !== randomItem));
-    //       setUsedItems((prev) => [...prev, randomItem]);
-    //       setIsDrawing(false);
-  
-    //       // 触发礼炮彩带效果
-    //       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-    //       // const audio = new Audio('/assets/sounds/ラッパのファンファーレ.mp3');
-    //       // audio.play().catch((err) => console.error('音频播放失败:', err));
-    //     }
-
-    //     // 增加时间间隔，使翻页动画逐渐减速
-    //     if (iterations >= duration / 2) {
-    //         intervalTime += 30; // 增加时间间隔使得翻页逐渐减速
-    //     }
-    // }, intervalTime);
   };
 
   return (
@@ -495,7 +459,7 @@ const LotteryApp = () => {
                       )}
                   </div>
                   <p className='text-3xl font-bold text-fuchsia-700 mt-3'>これまで出てきたお名前</p>
-                  <UsedList items={usedItems}/>
+                  <UsedList items={usedItems}  metaDatas={metaDatas}/>
                   <InputDrawer isOpen={isDrawerOpen} onAddItems={handleAddItems} bonusPoints={bonusPoints} setBonusPoints={setBonusPoints} setMetaDatas={setMetaDatas} toggleDrawer={() => setIsDrawerOpen(false)} />
               </div>
 

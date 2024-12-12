@@ -10,7 +10,7 @@ const NotificationCard = ({ message }) => {
       style={{
         backgroundColor: '#FDE047', // 背景色を黄色系に
         color: '#744210', // テキストの色をブラウン系に
-        marginBottom: '20px',
+        marginBottom: '32px',
         padding: '20px',
         borderRadius: '15px'
       }}
