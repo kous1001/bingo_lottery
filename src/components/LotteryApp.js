@@ -8,6 +8,8 @@ import NotificationCard from './NotificationCard';
 
 const LotteryApp = () => {
   const [items, setItems] = useState([]);
+  const [metaDatas, setMetaDatas] = useState([]);
+  const [resultIndex, setResultIndex] = useState(0);
   const [charGroup, setChatGroup] = useState([]);
   const [selectedChars, setSelectedChars] = useState([]);
   const [usedItems, setUsedItems] = useState([]);
@@ -100,7 +102,7 @@ const LotteryApp = () => {
   const updatePossibleChars = () => {
     setChatGroup(groupCharactersByIndex(items));
   }
-
+  const findPersonIndex = (arr, name) =>  arr.findIndex(item => item[0] + item[1] === name);
   const handleDraw = () => {
     if (isDrawing || items.length === 0) return;
     setShowWaiting(false); // 点击「スタート」后隐藏「抽選待ち」
@@ -115,6 +117,8 @@ const LotteryApp = () => {
     updatePossibleChars();    
     const drawItems = bonus ? bonus.items : items;
     const randomItem = drawItems[Math.floor(Math.random() * drawItems.length)];
+    //inspect index of randomItem and pass it to the resultDisplay Component
+    setResultIndex(findPersonIndex(metaDatas, randomItem));
     const charArray = randomItem.split(''); // 分解所选项目为字符
     setFinalChars(charArray); // 设置最终结果
     const slots = Array(charArray.length).fill(null); // 初始化空槽位
@@ -457,6 +461,8 @@ const LotteryApp = () => {
                     <ResultDisplay
                       chars={selectedChars}
                       isDrawing={isDrawing}
+                      metaDatas={metaDatas}
+                      resultIndex={resultIndex}
                       charGroup={charGroup}
                       finalResult={finalChars} // 新增这行，传入最终结果 
                     />
@@ -490,7 +496,7 @@ const LotteryApp = () => {
                   </div>
                   <p className='text-3xl font-bold text-fuchsia-700 mt-3'>これまで出てきたお名前</p>
                   <UsedList items={usedItems}/>
-                  <InputDrawer isOpen={isDrawerOpen} onAddItems={handleAddItems} bonusPoints={bonusPoints} setBonusPoints={setBonusPoints} toggleDrawer={() => setIsDrawerOpen(false)} />
+                  <InputDrawer isOpen={isDrawerOpen} onAddItems={handleAddItems} bonusPoints={bonusPoints} setBonusPoints={setBonusPoints} setMetaDatas={setMetaDatas} toggleDrawer={() => setIsDrawerOpen(false)} />
               </div>
 
             {/* Right Side - Two Rockets */}
@@ -649,7 +655,7 @@ const LotteryApp = () => {
                 animation: rocketLaunch 1s linear forwards;
             }
             .animate-rocket-delayed {
-                animation: rocketLaunch 1.5s linear forwards;
+                animation: rocketLaunch 1s linear forwards;
             }
             @keyframes rocketLaunch {
                 0% { transform: translateY(100%); }

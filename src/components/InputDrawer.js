@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BonusPointsDrawer from "./BonusPointsDrawer"
 
-const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDrawer }) => {
+const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDrawer, setMetaDatas}) => {
   const [inputValue, setInputValue] = useState('');
   // reloadFlg の初期値は false
   const [reloadFlg, setReloadFlg] = useState(false);
@@ -9,11 +9,24 @@ const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDr
 
 
   const handleAddItems = () => {
+
+    const metaDatas = [];
+    const fullnames = [];
+
     // 将输入按换行符分割，并移除空项
     const items = inputValue.split('\n')
                             .map(item => item.trim())
                             .filter(item => item);
-    onAddItems(items);
+    items.forEach(item => {
+      const [familyName, givenName, dept] = item.split(' ');
+
+      // Add items using addItem method
+      metaDatas.push([familyName, givenName, dept]);
+      const fullname = (familyName + givenName).replace(/\s/g, '');
+      fullnames.push(fullname);
+    });
+    onAddItems(fullnames);
+    setMetaDatas(metaDatas);
     setInputValue('');
   };
 

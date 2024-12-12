@@ -1,12 +1,14 @@
 import React from 'react';
 
-const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup}) => {
+const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, metaDatas}) => {
   // 判断字符是否仍在抽签中
   const isSpinning = (char, index) => {
     if (!isDrawing) return false; // 如果整体抽签已结束，不旋转
     // 检查当前字符是否与最终结果相同
     return char !== finalResult[index];
   };
+  const givenNameLength = metaDatas[resultIndex][0].length;
+  const depart = metaDatas[resultIndex][2]
 
   return (
     <div className="flex justify-center" style={{ height: `${90 * 2}px` }}>
