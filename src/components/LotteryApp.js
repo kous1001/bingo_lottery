@@ -102,7 +102,7 @@ const LotteryApp = () => {
   const updatePossibleChars = () => {
     setChatGroup(groupCharactersByIndex(items));
   }
-  const findPersonIndex = (arr, name) =>  arr.findIndex(item => item[0] + item[1] === name);
+  const findPersonIndex = (arr, name) =>  arr?.findIndex(item => item[0] + item[1] === name);
   const handleDraw = () => {
     if (isDrawing || items.length === 0) return;
     setShowWaiting(false); // 点击「スタート」后隐藏「抽選待ち」
@@ -170,6 +170,14 @@ const LotteryApp = () => {
               setItems((prev) => prev.filter((item) => item !== randomItem)); // 从项目中移除已选项
               setUsedItems((prev) => [...prev, [randomItem, findPersonIndex(metaDatas, randomItem)]]); // 添加到已使用列表
               setIsDrawing(false);
+              //delete the same item form bonuspoints
+              const newBonusPoints = bonusPoints.map(obj =>{
+                if(obj.items){
+                  obj.items = obj.items.filter(item => item !== randomItem);
+                }
+                return obj;
+              })
+              setBonusPoints(newBonusPoints);
     
               // 触发礼炮效果
               confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
@@ -231,6 +239,14 @@ const LotteryApp = () => {
           setItems((prev) => prev.filter((item) => item !== randomItem)); // 从项目中移除已选项
           setUsedItems((prev) => [...prev, [randomItem, findPersonIndex(metaDatas, randomItem)]]); // 添加到已使用列表
           setIsDrawing(false);
+          //delete the same item form bonuspoints
+          const newBonusPoints = bonusPoints.map(obj =>{
+            if(obj.items){
+              obj.items = obj.items.filter(item => item !== randomItem);
+            }
+            return obj;
+          })
+          setBonusPoints(newBonusPoints);
 
           // 触发礼炮效果
           confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });

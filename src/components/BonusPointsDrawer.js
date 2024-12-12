@@ -8,7 +8,7 @@ const BonusPointsDrawer = ({ isOpen, toggleDrawer, bonusPoints, setBonusPoints }
   const [selectedBonusIndex, setSelectedBonusIndex] = useState(null);
 
   const handleAddBonusPoint = () => {
-     // Validation check
+    // Validation check
     if (!bonusRound || !bonusItems.trim()) {
         toast.error('抽選回数と対象項目を正しく入力してください！');
         return;
@@ -16,7 +16,11 @@ const BonusPointsDrawer = ({ isOpen, toggleDrawer, bonusPoints, setBonusPoints }
 
     const newBonusPoint = {
       round: parseInt(bonusRound, 10),
-      items: bonusItems.split('\n').map((item) => item.trim()),
+      items: bonusItems.split('\n').map((item) => {
+        item.trim();
+        const temp = item.split(' ');
+        return temp[0] + temp[1];
+      }),
     };
 
     if (selectedBonusIndex !== null) {
@@ -28,7 +32,7 @@ const BonusPointsDrawer = ({ isOpen, toggleDrawer, bonusPoints, setBonusPoints }
       // 新規追加
       setBonusPoints([...bonusPoints, newBonusPoint]);
     }
-
+    
     setBonusRound('');
     setBonusItems('');
     setSelectedBonusIndex(null);
