@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const BonusPointsDrawer = ({ isOpen, toggleDrawer, bonusPoints, setBonusPoints }) => {
+const BonusPointsDrawer = ({ isOpen, toggleDrawer, bonusPoints, setBonusPoints, metaDatas}) => {
   const [bonusRound, setBonusRound] = useState('');
   const [bonusItems, setBonusItems] = useState('');
   const [selectedBonusIndex, setSelectedBonusIndex] = useState(null);
@@ -19,6 +19,13 @@ const BonusPointsDrawer = ({ isOpen, toggleDrawer, bonusPoints, setBonusPoints }
       items: bonusItems.split('\n').map((item) => {
         item.trim();
         const temp = item.split(' ');
+        const isEqual = metaDatas.some(metaArray => 
+          metaArray[0] === temp[0] &&
+          metaArray[1] === temp[1] &&
+          metaArray[2] === temp[2]);
+        
+        if(!isEqual) metaDatas.push(temp);
+       
         return temp[0] + temp[1];
       }),
     };
@@ -38,10 +45,28 @@ const BonusPointsDrawer = ({ isOpen, toggleDrawer, bonusPoints, setBonusPoints }
     setSelectedBonusIndex(null);
   };
 
+  function transformArray(arr1, arr2) {
+    return arr1.map((item, index) => {
+        // 対応する第2引数の部分配列を探す
+        const matchingSubArray = arr2.find(subArr => 
+            item === subArr[0] + subArr[1]
+        );
+        
+        // マッチする部分配列が見つかった場合、その部分配列を返す
+        // そうでない場合は元の要素を返す
+        return matchingSubArray || item;
+    });
+  }
+
   const handleEditBonusPoint = (index) => {
     const bonusPoint = bonusPoints[index];
     setBonusRound(bonusPoint.round);
-    setBonusItems(bonusPoint.items.join(', '));
+    const result = transformArray(bonusPoint.items, metaDatas);
+    const fix = [];
+    result.forEach(element => {
+      fix.push(element[0] + " " + element[1] + " " + element[2])
+    });
+    setBonusItems(fix.join('\n'));
     setSelectedBonusIndex(index);
   };
 

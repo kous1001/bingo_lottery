@@ -480,7 +480,7 @@ const LotteryApp = () => {
                   </div>
                   <p className='text-3xl font-bold text-fuchsia-700 mt-3'>これまで出てきたお名前</p>
                   <UsedList items={usedItems}  metaDatas={metaDatas}/>
-                  <InputDrawer isOpen={isDrawerOpen} onAddItems={handleAddItems} bonusPoints={bonusPoints} setBonusPoints={setBonusPoints} setMetaDatas={setMetaDatas} toggleDrawer={() => setIsDrawerOpen(false)} />
+                  <InputDrawer isOpen={isDrawerOpen} onAddItems={handleAddItems} bonusPoints={bonusPoints} setBonusPoints={setBonusPoints} metaDatas={metaDatas} setMetaDatas={setMetaDatas} toggleDrawer={() => setIsDrawerOpen(false)} />
               </div>
 
             {/* Right Side - Two Rockets */}

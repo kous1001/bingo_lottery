@@ -8,7 +8,7 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
     // return char !== finalResult[index];
     return true;
   };
-  const familyNameLength = metaDatas[resultIndex][0].length;
+  const familyNameLength = metaDatas[resultIndex][0]?.length;
   const depart = metaDatas[resultIndex][2]
   const bgColor = (depart === "ADM") ?  "#e2fa40" :
                   (depart === "ADV") ?  "#9F1E49" :
@@ -90,7 +90,7 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
       {/* Given Name Container */}
       <div className="givenNameContainer flex" style={{ height: `${90 * 2}px`}}>
         {givenChars.map((char, index) => {
-          const adjustedIndex = Math.min(index + familyNameLength - 1, 6);
+          const adjustedIndex = Math.min(index + familyNameLength - 1, 3);
           return (
             <div
               className="slot-wrapper"

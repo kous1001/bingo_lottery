@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BonusPointsDrawer from "./BonusPointsDrawer"
 
-const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDrawer, setMetaDatas}) => {
+const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDrawer, setMetaDatas ,metaDatas}) => {
   const [inputValue, setInputValue] = useState('');
   // reloadFlg の初期値は false
   const [reloadFlg, setReloadFlg] = useState(false);
@@ -21,7 +21,12 @@ const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDr
       const [familyName, givenName, dept] = item.split(' ');
 
       // Add items using addItem method
-      metaDatas.push([familyName, givenName, dept]);
+      const isEqual = metaDatas.some(metaArray => 
+        metaArray[0] === familyName &&
+        metaArray[1] === givenName &&
+        metaArray[2] === dept);
+      
+      if(!isEqual) metaDatas.push([familyName, givenName, dept]);
       const fullname = (familyName + givenName).replace(/\s/g, '');
       fullnames.push(fullname);
     });
@@ -89,6 +94,7 @@ const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDr
         ボーナスポイント管理
       </button>
       <BonusPointsDrawer
+        metaDatas={metaDatas}
         isOpen={isBonusDrawerOpen}
         toggleDrawer={() => setIsBonusDrawerOpen(false)}
         bonusPoints={bonusPoints}
