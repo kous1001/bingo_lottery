@@ -231,7 +231,7 @@ const LotteryApp = () => {
           .catch((err) => console.error('音声再生エラー:', err));   
             }, 500);
           }
-        }, 400 * (index + 1)); // 每个字符停止的延迟时间
+        }, 300 * (index + 1)); // 每个字符停止的延迟时间
       } else {     
         setSelectedChars((prev) => {
           const newChars = [...prev];
