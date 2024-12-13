@@ -5,7 +5,8 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
   const isSpinning = (char, index) => {
     if (!isDrawing) return false; // 如果整体抽签已结束，不旋转
     // 检查当前字符是否与最终结果相同
-    return char !== finalResult[index];
+    // return char !== finalResult[index];
+    return true;
   };
   const familyNameLength = metaDatas[resultIndex][0].length;
   const depart = metaDatas[resultIndex][2]
@@ -77,8 +78,8 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
                   <div className="slot-face bottom">
                     {charGroup[adjustedIndex][Math.floor(Math.random() * charGroup[adjustedIndex].length)] || ' '}
                   </div>
-                  <div className="slot-face left">抽</div>
-                  <div className="slot-face right">選</div>
+                  {/* <div className="slot-face left">抽</div>
+                  <div className="slot-face right">選</div> */}
                 </div>
               </div>
             );
@@ -89,7 +90,7 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
       {/* Given Name Container */}
       <div className="givenNameContainer flex" style={{ height: `${90 * 2}px`}}>
         {givenChars.map((char, index) => {
-          const adjustedIndex = Math.min(familyNameLength - 1, 2);
+          const adjustedIndex = Math.min(index + familyNameLength - 1, 6);
           return (
             <div
               className="slot-wrapper"
@@ -111,8 +112,8 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
                 <div className="slot-face bottom">
                   {charGroup[adjustedIndex][Math.floor(Math.random() * charGroup[adjustedIndex].length)] || ' '}
                 </div>
-                <div className="slot-face left">抽</div>
-                <div className="slot-face right">選</div>
+                {/* <div className="slot-face left">抽</div>
+                <div className="slot-face right">選</div> */}
               </div>
             </div>
           );

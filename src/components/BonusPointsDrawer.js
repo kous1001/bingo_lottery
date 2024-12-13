@@ -75,7 +75,7 @@ const BonusPointsDrawer = ({ isOpen, toggleDrawer, bonusPoints, setBonusPoints }
         /> */}
           <textarea
             className="w-full p-2 border rounded mb-4"
-            placeholder="名前ごと一行で入力してください"
+            placeholder="苗字 名前 部署名のフォーマットで一行ずつ入力してください"
             style={{ height: '200px' }}  // 设置高度为 200px
             value={bonusItems}
             onChange={(e) => setBonusItems(e.target.value)}

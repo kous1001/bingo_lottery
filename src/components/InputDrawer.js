@@ -59,7 +59,7 @@ const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDr
       <h2 className="text-xl font-bold mb-4">項目追加</h2>
       <textarea
         className="w-full p-2 border rounded mb-4"
-        placeholder="名前ごと一行で入力してください"
+        placeholder="苗字 名前 部署名のフォーマットで一行ずつ入力してください"
         style={{ height: '200px' }}  // 设置高度为 200px
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
