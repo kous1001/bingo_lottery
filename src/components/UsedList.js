@@ -43,7 +43,7 @@ const UsedList = ({ items, metaDatas}) => {
           >
             <span>{metaDatas[item[1]][2]}</span>
             <br/>
-            <span>{metaDatas[item[1]][1]}</span>
+            <span className='text-2xl'>{metaDatas[item[1]][1]}</span>
           </div>
         </Card>
         );
