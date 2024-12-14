@@ -21,6 +21,27 @@ const LotteryApp = () => {
   const [drawCount, setDrawCount] = useState(0); // 抽選回数を追跡
   const [notificationMessage, setNotificationMessage] = useState(null); // お知らせメッセージ
   const [finalChars, setFinalChars] = useState([]); // 添加新的 state
+  const [questions, setQuestions] = useState([
+    "自分を動物に例えると何？",
+    "タイムマシンがあったら行きたい時代と理由",
+    "宝くじで10億円当たったら、まず何を買う？",
+    "突然ペンギンが家に届いたらどうする？",
+    "もし一日だけ会社の社長になれたら、何をする？",
+    "もしも明日だけ自由に使えるスーパーパワーがあったら何？",
+    "今すぐ絶対にやりたくないことは？",
+    "宇宙人と初めて会ったら、最初に何を話す？",
+    "未来の自分が今の自分に一言言うとしたら？",
+    "もしも自分が24時間テレビのランナーになったら、どこを走りたい？",
+    "朝起きたら突然、自分が掃除ロボットになっていたら、何をする？",
+    "明日、空から何かが降ってくるとしたら、何がいい？",
+    "未来の技術で『何でも1つだけ』実現できるなら、何をお願いする？",
+    "突然『自分の分身』が現れたら、まず何を頼む？",
+  ]);
+  const [currentQuestion, setCurrentQuestion] = useState(null); // 現在の質問を管理
+  const [currentCycleCount, setCurrentCycleCount] = useState(0); // 1〜3のカウンタ
+  const [questionTriggerRound, setQuestionTriggerRound] = useState(
+    Math.floor(Math.random() * 3)
+  ); // 質問するタイミング（0〜2）
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -127,6 +148,7 @@ const LotteryApp = () => {
     audioStart
     .play()
     .then(() => {
+      setCurrentQuestion(null);
       if (previousBonus) {
         setNotificationMessage(null); // ボーナス後の通常抽選で通知をクリア
       }
@@ -136,15 +158,16 @@ const LotteryApp = () => {
     // 控制每个字符独立旋转并停止
     charArray.forEach((_, index) => {
       if(items.length !== 1){
-        let currentChar = ''; // 当前字符
+        let currentChar = ""; // 当前字符
         const interval = setInterval(() => {
           const possibleChars = items
-            .map((item) => item[index] || '') // 获取所有项目中当前位置的字符
+            .map((item) => item[index] || "") // 获取所有项目中当前位置的字符
             .filter((char) => char); // 移除空字符
-    
+
           // 随机选择一个字符
-          currentChar = possibleChars[Math.floor(Math.random() * possibleChars.length)];
-    
+          currentChar =
+            possibleChars[Math.floor(Math.random() * possibleChars.length)];
+
           // 设置旋转中的字符
           setSelectedChars((prev) => {
             const newChars = [...prev];
@@ -152,83 +175,121 @@ const LotteryApp = () => {
             return newChars;
           });
         }, 50); // 每50ms更新一次字符
-    
+
         // 定时停止当前字符旋转
         setTimeout(() => {
           clearInterval(interval);
-    
+
           // 停止旋转后设置最终字符
           setSelectedChars((prev) => {
             const newChars = [...prev];
             newChars[index] = charArray[index];
             return newChars;
           });
-    
+
           // 如果是最后一个字符，完成抽签逻辑
           if (index === charArray.length - 1) {
             setTimeout(() => {
               setItems((prev) => prev.filter((item) => item !== randomItem)); // 从项目中移除已选项
-              setUsedItems((prev) => [...prev, [randomItem, findPersonIndex(metaDatas, randomItem)]]); // 添加到已使用列表
+              setUsedItems((prev) => [
+                ...prev,
+                [randomItem, findPersonIndex(metaDatas, randomItem)],
+              ]); // 添加到已使用列表
               setIsDrawing(false);
               //delete the same item form bonuspoints
-              const newBonusPoints = bonusPoints.map(obj =>{
-                if(obj.items){
-                  obj.items = obj.items.filter(item => item !== randomItem);
+              const newBonusPoints = bonusPoints.map((obj) => {
+                if (obj.items) {
+                  obj.items = obj.items.filter((item) => item !== randomItem);
                 }
                 return obj;
-              })
+              });
               setBonusPoints(newBonusPoints);
-    
+
               // 触发礼炮效果
               confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+              // 抽選カウントを更新
+              setCurrentCycleCount((prev) => {
+                const newCount = (prev + 1) % 3; // 1〜3を循環
+                if (newCount === 0) {
+                  setQuestionTriggerRound(Math.floor(Math.random() * 3)); // 新しいランダムタイミングを設定
+                }
+                return newCount;
+              });
               audioStart.pause();
               audioStart.currentTime = 0;
-              const audio = new Audio('/assets/sounds/レベルアップ.mp3');
+              const audio = new Audio("/assets/sounds/レベルアップ.mp3");
               audio
-          .play()
-          .then(() => {
-            // 「レベルアップ」音声再生後に通知を設定
-            if (upcomingBonus) {
-              if(upcomingBonus.round === 5){
-                setNotificationMessage(
-                  {title:"次はボーナスポイントの抽選を行います", topic: "一番テニス🎾がうまい役員はは誰でしょうか？"}
-                );
-              }else if(upcomingBonus.round === 15){
-                setNotificationMessage(
-                  {title:"次はボーナスポイントの抽選を行います", topic: "一番お酒🍺のことを愛している事業部長は誰でしょうか？"}
-                );
-              }else if(upcomingBonus.round === 20){
-                setNotificationMessage(
-                  {title:"次はボーナスポイントの抽選を行います", topic: " 一番バイク🏍が好きな事業部長は誰でしょうか？"}
-                );
-              }else{
-                setNotificationMessage(
-                  {title:"次はボーナスポイントの抽選を行います", topic: ""}
-                );
-              }
-            }
+                .play()
+                .then(() => {
+                  // 質問の表示ロジック
+                  if (!bonus && currentCycleCount === questionTriggerRound && questions.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * questions.length);
+                    const selectedQuestion = questions[randomIndex];
+                    setCurrentQuestion({
+                      title: "🔥当選者へのお題🔥",
+                      topic: selectedQuestion,
+                      answer: "",
+                    });
 
-            if(bonus){
-              if(bonus.round === 5){
-                setNotificationMessage(
-                  {title:"", topic: "一番テニスがうまい役員はは誰でしょうか？", answer:"👇🎾こちらの方でしょうか🎾👇"}
-                );
-              }else if(bonus.round === 15){
-                setNotificationMessage(
-                  {title:"", topic: "一番お酒のことを愛している事業部長は誰でしょうか？", answer:"👇🍺こちらの方でしょうか🍺👇"}
-                );
-              }else if(bonus.round === 20){
-                setNotificationMessage(
-                  {title:"", topic: " 一番バイクが好きな事業部長は誰でしょうか？", answer:"👇🏍こちらの方でしょうか🏍👇"}
-                );
-              }else{
-                setNotificationMessage(
-                  {title:"", topic: "★ボーナスポイント★", answer:"👇こちらの方です~👇"}
-                );
-              }
-            }
-          })
-          .catch((err) => console.error('音声再生エラー:', err));   
+                    setQuestions((prev) => prev.filter((_, index) => index !== randomIndex));
+                  }
+
+                  // 「レベルアップ」音声再生後に通知を設定
+                  if (upcomingBonus) {
+                    if (upcomingBonus.round === 5) {
+                      setNotificationMessage({
+                        title: "次はボーナスポイントの抽選を行います",
+                        topic: "一番テニス🎾がうまい役員はは誰でしょうか？",
+                      });
+                    } else if (upcomingBonus.round === 15) {
+                      setNotificationMessage({
+                        title: "次はボーナスポイントの抽選を行います",
+                        topic:
+                          "一番お酒🍺のことを愛している事業部長は誰でしょうか？",
+                      });
+                    } else if (upcomingBonus.round === 20) {
+                      setNotificationMessage({
+                        title: "次はボーナスポイントの抽選を行います",
+                        topic: " 一番バイク🏍が好きな事業部長は誰でしょうか？",
+                      });
+                    } else {
+                      setNotificationMessage({
+                        title: "次はボーナスポイントの抽選を行います",
+                        topic: "",
+                      });
+                    }
+                  }
+
+                  if (bonus) {
+                    if (bonus.round === 5) {
+                      setNotificationMessage({
+                        title: "",
+                        topic: "一番テニスがうまい役員はは誰でしょうか？",
+                        answer: "👇🎾こちらの方でしょうか🎾👇",
+                      });
+                    } else if (bonus.round === 15) {
+                      setNotificationMessage({
+                        title: "",
+                        topic:
+                          "一番お酒のことを愛している事業部長は誰でしょうか？",
+                        answer: "👇🍺こちらの方でしょうか🍺👇",
+                      });
+                    } else if (bonus.round === 20) {
+                      setNotificationMessage({
+                        title: "",
+                        topic: " 一番バイクが好きな事業部長は誰でしょうか？",
+                        answer: "👇🏍こちらの方でしょうか🏍👇",
+                      });
+                    } else {
+                      setNotificationMessage({
+                        title: "",
+                        topic: "★ボーナスポイント★",
+                        answer: "👇こちらの方です~👇",
+                      });
+                    }
+                  }
+                })
+                .catch((err) => console.error("音声再生エラー:", err));
             }, 500);
           }
         }, 300 * (index + 1)); // 每个字符停止的延迟时间
@@ -431,6 +492,9 @@ const LotteryApp = () => {
               <div className="flex-1 flex flex-col items-center justify-center px-4">
                   <h1 className="text-4xl font-bold mb-5">🎉NAME BINGO🎉</h1>
                   <h2 className='mb-5'>ROUND: {drawCount}</h2>
+                  {currentQuestion && (
+                      <NotificationCard message={currentQuestion} currentQuestion={currentQuestion}/>
+                  )}
                   {notificationMessage && (
                       <NotificationCard message={notificationMessage} />
                   )}

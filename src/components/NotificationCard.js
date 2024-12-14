@@ -1,14 +1,14 @@
 import { Card, Text, Divider } from '@mantine/core';
 
-const NotificationCard = ({ message }) => {
+const NotificationCard = ({ message, currentQuestion}) => {
   if (!message) return null;
-
+  const bg = currentQuestion ?  "#88E570" : "#FDE047";
   return (
     <Card
       shadow="md"
       radius="lg"
       style={{
-        backgroundColor: '#FDE047', // 背景色を黄色系に
+        backgroundColor: `${bg}`, // 背景色を黄色系に
         color: '#744210', // テキストの色をブラウン系に
         marginBottom: '32px',
         padding: '20px',
