@@ -37,6 +37,13 @@ const LotteryApp = () => {
     "未来の技術で『何でも1つだけ』実現できるなら、何をお願いする？",
     "突然『自分の分身』が現れたら、まず何を頼む？",
   ]);
+  const [secondQuestions, setSecondQuestions] = useState([
+    "大事なプレゼン中に、もしマイクが突然壊れたらどうやって乗り切りますか？",
+    "部下やチームに対して、『これは誇らしかった！』という出来事は？",
+    "来年、密かに挑戦してみたい新しい趣味や習い事は何ですか？",
+    "会社で密かに“謎のあだ名”をつけられるとしたら、どんな名前だと思いますか？",
+    "自分の名前を冠した“オリジナル商品”を作るなら、どんなものを売りますか？",
+  ]);
   const [currentQuestion, setCurrentQuestion] = useState(null); // 現在の質問を管理
   const [currentCycleCount, setCurrentCycleCount] = useState(0); // 1〜3のカウンタ
   const [questionTriggerRound, setQuestionTriggerRound] = useState(
@@ -202,7 +209,7 @@ const LotteryApp = () => {
                   obj.items = obj.items.filter((item) => item !== randomItem);
                 }
                 return obj;
-              });
+              }).filter((obj) => !(obj.items && obj.items.length === 0)); // itemsが空なら削除
               setBonusPoints(newBonusPoints);
 
               // 触发礼炮效果
@@ -239,18 +246,18 @@ const LotteryApp = () => {
                     if (upcomingBonus.round === 5) {
                       setNotificationMessage({
                         title: "次はボーナスポイントの抽選を行います",
-                        topic: "一番テニス🎾がうまい役員はは誰でしょうか？",
+                        topic: "🦸🏻‍♂️役員優遇🦸🏻‍♂️",
                       });
                     } else if (upcomingBonus.round === 15) {
                       setNotificationMessage({
                         title: "次はボーナスポイントの抽選を行います",
                         topic:
-                          "一番お酒🍺のことを愛している事業部長は誰でしょうか？",
+                          "🎉事業部長優遇🎉",
                       });
                     } else if (upcomingBonus.round === 20) {
                       setNotificationMessage({
                         title: "次はボーナスポイントの抽選を行います",
-                        topic: " 一番バイク🏍が好きな事業部長は誰でしょうか？",
+                        topic: "🎉事業部長優遇🎉",
                       });
                     } else {
                       setNotificationMessage({
@@ -263,28 +270,37 @@ const LotteryApp = () => {
                   if (bonus) {
                     if (bonus.round === 5) {
                       setNotificationMessage({
-                        title: "",
-                        topic: "一番テニスがうまい役員はは誰でしょうか？",
-                        answer: "👇🎾こちらの方でしょうか🎾👇",
+                        title: "🔥当選者へのお題🔥",
+                        topic: "もし来年の目標を“漢字一文字”で表すとしたら？",
+                        // answer: "👇🎾こちらの方でしょうか🎾👇",
                       });
                     } else if (bonus.round === 15) {
-                      setNotificationMessage({
-                        title: "",
-                        topic:
-                          "一番お酒のことを愛している事業部長は誰でしょうか？",
-                        answer: "👇🍺こちらの方でしょうか🍺👇",
-                      });
+                      if(secondQuestions.length > 0){
+                        const randomIndex = Math.floor(Math.random() * secondQuestions.length);
+                        const selectedQuestion = secondQuestions[randomIndex];
+                        setSecondQuestions((prev) => prev.filter((_, index) => index !== randomIndex)); 
+                        setNotificationMessage({
+                          title: "🔥当選者へのお題🔥",
+                          topic: selectedQuestion,
+                          // answer: "👇🍺こちらの方でしょうか🍺👇",
+                        });
+                      }                 
                     } else if (bonus.round === 20) {
-                      setNotificationMessage({
-                        title: "",
-                        topic: " 一番バイクが好きな事業部長は誰でしょうか？",
-                        answer: "👇🏍こちらの方でしょうか🏍👇",
-                      });
+                      if(secondQuestions.length > 0){
+                        const randomIndex = Math.floor(Math.random() * secondQuestions.length);
+                        const selectedQuestion = secondQuestions[randomIndex];
+                        setSecondQuestions((prev) => prev.filter((_, index) => index !== randomIndex)); 
+                        setNotificationMessage({
+                          title: "🔥当選者へのお題🔥",
+                          topic: selectedQuestion,
+                          // answer: "👇🏍こちらの方でしょうか🏍👇",
+                        });
+                      }                    
                     } else {
                       setNotificationMessage({
                         title: "",
                         topic: "★ボーナスポイント★",
-                        answer: "👇こちらの方です~👇",
+                        // answer: "👇こちらの方です~👇",
                       });
                     }
                   }
