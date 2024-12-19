@@ -110,7 +110,7 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
          {!isDrawing &&
                       <div
                       style={{
-                        marginTop:'-3.9%',
+                        marginTop:'-3.2%',
                         position: 'absolute',
                         top: '-1.5rem', // 調整可能
                         textAlign: 'center',
