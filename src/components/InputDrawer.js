@@ -18,7 +18,7 @@ const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDr
                             .map(item => item.trim())
                             .filter(item => item);
     items.forEach(item => {
-      const [familyName, givenName, dept] = item.split(' ');
+      const [familyName, givenName, dept, furigana] = item.split(' ');
 
       // Add items using addItem method
       const isEqual = metaDatas.some(metaArray => 
@@ -26,7 +26,7 @@ const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDr
         metaArray[1] === givenName &&
         metaArray[2] === dept);
       
-      if(!isEqual) metaDatas.push([familyName, givenName, dept]);
+      if(!isEqual) metaDatas.push([familyName, givenName, dept, furigana]);
       const fullname = (familyName + givenName).replace(/\s/g, '');
       fullnames.push(fullname);
     });

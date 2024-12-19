@@ -487,8 +487,10 @@ const LotteryApp = () => {
 
             {/* Center Content */}
             <div className="flex-1 flex flex-col items-center justify-center px-4">
-              <h1 className="text-4xl font-bold mb-5">🎉NAME BINGO🎉</h1>
-              <h2 className="mb-5">ROUND: {drawCount}</h2>
+              <h1 className="text-4xl font-bold mb-12">🎉NAME BINGO🎉</h1>
+              {!isFullscreen && 
+                <h2 className="mb-10">ROUND: {drawCount}</h2>
+              }
               {notificationMessage && (
                 <NotificationCard message={notificationMessage} />
               )}

@@ -32,8 +32,8 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
               borderRadius: '15px',
               textAlign: 'center',
               lineHeight: '40px',
-              fontSize: '1.5rem',
-              marginBottom:"10px",
+              fontSize: '1.2rem',
+              marginBottom:"35px",
               fontWeight: 'bold',
             }}
           >
@@ -54,7 +54,24 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
           </div>
         )}
         {/* Family name characters */}
-        <div className={`flex ${!isDrawing ? 'familyNameContainer' : ''}`} style={{ height: `${125}px`}}>
+        <div className={`flex ${!isDrawing ? 'familyNameContainer' : ''}`} style={{ position: 'relative', height: `${125}px`}}>
+           {/* 読み方を表示する部分 */}
+           {!isDrawing &&
+                      <div
+                      style={{
+                        marginTop:'-3%',
+                        position: 'absolute',
+                        top: '-1.5rem', // 調整可能
+                        width: '100%',
+                        textAlign: 'center',
+                        fontSize: '1.2rem',
+                        color: '#FF4040', // テキスト色
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {metaDatas[resultIndex][3].split('%')[0]}
+                    </div>                           
+                  }
           {familyChars.map((char, index) => {
             const adjustedIndex = Math.min(index, 2);
             return (
@@ -62,7 +79,7 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
                 className="slot-wrapper"
                 key={index}
                 style={{
-                  transform: `scale(${isDrawing ? 2 : 1.3})`,
+                  transform: `scale(${isDrawing ? 2 : 1.2})`,
                 }}
               >
                 <div
@@ -86,9 +103,25 @@ const ResultDisplay = ({ chars, isDrawing, finalResult, charGroup, resultIndex, 
           })}
         </div>
       </div>
-
+  
       {/* Given Name Container */}
-      <div className="givenNameContainer flex" style={{ height: `${90 * 2}px`}}>
+      <div className="flex" style={{position: 'relative', height: `${90 * 2}px`}}>
+         {/* 読み方を表示する部分 */}
+         {!isDrawing &&
+                      <div
+                      style={{
+                        marginTop:'-3.9%',
+                        position: 'absolute',
+                        top: '-1.5rem', // 調整可能
+                        textAlign: 'center',
+                        fontSize: '1.4rem',
+                        color: '#FF4040', // テキスト色
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {metaDatas[resultIndex][3].split('%')[1]}
+                    </div>                           
+                  }
         {givenChars.map((char, index) => {
           const adjustedIndex = Math.min(index + familyNameLength - 1, 3);
           return (
