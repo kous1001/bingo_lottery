@@ -21,34 +21,6 @@ const LotteryApp = () => {
   const [drawCount, setDrawCount] = useState(0); // 抽選回数を追跡
   const [notificationMessage, setNotificationMessage] = useState(null); // お知らせメッセージ
   const [finalChars, setFinalChars] = useState([]); // 添加新的 state
-  const [questions, setQuestions] = useState([
-    "自分を動物に例えると何？",
-    "タイムマシンがあったら行きたい時代と理由",
-    "宝くじで10億円当たったら、まず何を買う？",
-    "突然ペンギンが家に届いたらどうする？",
-    "もし一日だけ会社の社長になれたら、何をする？",
-    "もしも明日だけ自由に使えるスーパーパワーがあったら何？",
-    "今すぐ絶対にやりたくないことは？",
-    "宇宙人と初めて会ったら、最初に何を話す？",
-    "未来の自分が今の自分に一言言うとしたら？",
-    "もしも自分が24時間テレビのランナーになったら、どこを走りたい？",
-    "朝起きたら突然、自分が掃除ロボットになっていたら、何をする？",
-    "明日、空から何かが降ってくるとしたら、何がいい？",
-    "未来の技術で『何でも1つだけ』実現できるなら、何をお願いする？",
-    "突然『自分の分身』が現れたら、まず何を頼む？",
-  ]);
-  const [secondQuestions, setSecondQuestions] = useState([
-    "大事なプレゼン中に、もしマイクが突然壊れたらどうやって乗り切りますか？",
-    "部下やチームに対して、『これは誇らしかった！』という出来事は？",
-    "来年、密かに挑戦してみたい新しい趣味や習い事は何ですか？",
-    "会社で密かに“謎のあだ名”をつけられるとしたら、どんな名前だと思いますか？",
-    "自分の名前を冠した“オリジナル商品”を作るなら、どんなものを売りますか？",
-  ]);
-  const [currentQuestion, setCurrentQuestion] = useState(null); // 現在の質問を管理
-  const [currentCycleCount, setCurrentCycleCount] = useState(0); // 1〜3のカウンタ
-  const [questionTriggerRound, setQuestionTriggerRound] = useState(
-    Math.floor(Math.random() * 3)
-  ); // 質問するタイミング（0〜2）
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -155,7 +127,6 @@ const LotteryApp = () => {
     audioStart
     .play()
     .then(() => {
-      setCurrentQuestion(null);
       if (previousBonus) {
         setNotificationMessage(null); // ボーナス後の通常抽選で通知をクリア
       }
@@ -214,50 +185,28 @@ const LotteryApp = () => {
 
               // 触发礼炮效果
               confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-              // 抽選カウントを更新
-              setCurrentCycleCount((prev) => {
-                const newCount = (prev + 1) % 3; // 1〜3を循環
-                if (newCount === 0) {
-                  setQuestionTriggerRound(Math.floor(Math.random() * 3)); // 新しいランダムタイミングを設定
-                }
-                return newCount;
-              });
               audioStart.pause();
               audioStart.currentTime = 0;
               const audio = new Audio("/assets/sounds/レベルアップ.mp3");
               audio
                 .play()
-                .then(() => {
-                  // 質問の表示ロジック
-                  if (!bonus && currentCycleCount === questionTriggerRound && questions.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * questions.length);
-                    const selectedQuestion = questions[randomIndex];
-                    setCurrentQuestion({
-                      title: "🔥当選者へのお題🔥",
-                      topic: selectedQuestion,
-                      answer: "",
-                    });
-
-                    setQuestions((prev) => prev.filter((_, index) => index !== randomIndex));
-                  }
-
+                .then(() => {                
                   // 「レベルアップ」音声再生後に通知を設定
                   if (upcomingBonus) {
                     if (upcomingBonus.round === 5) {
                       setNotificationMessage({
                         title: "次はボーナスポイントの抽選を行います",
-                        topic: "🦸🏻‍♂️役員優遇🦸🏻‍♂️",
+                        topic: "一番テニス🎾がうまい役員はは誰でしょうか？",
                       });
                     } else if (upcomingBonus.round === 15) {
                       setNotificationMessage({
                         title: "次はボーナスポイントの抽選を行います",
-                        topic:
-                          "🎉事業部長優遇🎉",
+                        topic:"一番お酒🍺のことを愛している事業部長は誰でしょうか？",
                       });
                     } else if (upcomingBonus.round === 20) {
                       setNotificationMessage({
                         title: "次はボーナスポイントの抽選を行います",
-                        topic: "🎉事業部長優遇🎉",
+                        topic: "一番バイク🏍が好きな事業部長は誰でしょうか？",
                       });
                     } else {
                       setNotificationMessage({
@@ -270,32 +219,22 @@ const LotteryApp = () => {
                   if (bonus) {
                     if (bonus.round === 5) {
                       setNotificationMessage({
-                        title: "🔥当選者へのお題🔥",
-                        topic: "もし来年の目標を“漢字一文字”で表すとしたら？",
-                        // answer: "👇🎾こちらの方でしょうか🎾👇",
+                        title: "",
+                        topic: "一番テニス🎾がうまい役員はは誰でしょうか？",
+                        answer: "👇🎾こちらの方でしょうか🎾👇",
                       });
-                    } else if (bonus.round === 15) {
-                      if(secondQuestions.length > 0){
-                        const randomIndex = Math.floor(Math.random() * secondQuestions.length);
-                        const selectedQuestion = secondQuestions[randomIndex];
-                        setSecondQuestions((prev) => prev.filter((_, index) => index !== randomIndex)); 
-                        setNotificationMessage({
-                          title: "🔥当選者へのお題🔥",
-                          topic: selectedQuestion,
-                          // answer: "👇🍺こちらの方でしょうか🍺👇",
-                        });
-                      }                 
-                    } else if (bonus.round === 20) {
-                      if(secondQuestions.length > 0){
-                        const randomIndex = Math.floor(Math.random() * secondQuestions.length);
-                        const selectedQuestion = secondQuestions[randomIndex];
-                        setSecondQuestions((prev) => prev.filter((_, index) => index !== randomIndex)); 
-                        setNotificationMessage({
-                          title: "🔥当選者へのお題🔥",
-                          topic: selectedQuestion,
-                          // answer: "👇🏍こちらの方でしょうか🏍👇",
-                        });
-                      }                    
+                    } else if (bonus.round === 15) {                    
+                      setNotificationMessage({
+                        title: "",
+                        topic: "一番お酒のことを愛している事業部長は誰でしょうか？",
+                        answer: "👇🍺こちらの方でしょうか🍺👇",
+                      });              
+                    } else if (bonus.round === 20) {                
+                      setNotificationMessage({
+                        title: "",
+                        topic: "一番バイクが好きな事業部長は誰でしょうか？",
+                        answer: "👇🏍こちらの方でしょうか🏍👇",
+                      });                
                     } else {
                       setNotificationMessage({
                         title: "",
@@ -550,12 +489,6 @@ const LotteryApp = () => {
             <div className="flex-1 flex flex-col items-center justify-center px-4">
               <h1 className="text-4xl font-bold mb-5">🎉NAME BINGO🎉</h1>
               <h2 className="mb-5">ROUND: {drawCount}</h2>
-              {currentQuestion && (
-                <NotificationCard
-                  message={currentQuestion}
-                  currentQuestion={currentQuestion}
-                />
-              )}
               {notificationMessage && (
                 <NotificationCard message={notificationMessage} />
               )}
