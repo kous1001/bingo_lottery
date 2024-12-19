@@ -32,6 +32,7 @@ const InputDrawer = ({ onAddItems, bonusPoints, setBonusPoints, isOpen, toggleDr
     });
     onAddItems(fullnames);
     setMetaDatas(metaDatas);
+    console.log(metaDatas);
     setInputValue('');
   };
 
